@@ -24,13 +24,11 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-" Plug 'pangloss/vim-javascript'
+Plug 'pangloss/vim-javascript'
 Plug 'othree/yajs.vim'
 Plug 'othree/es.next.syntax.vim'
-Plug 'mxw/vim-jsx'
 Plug 'evanmiller/nginx-vim-syntax'
 Plug 'easymotion/vim-easymotion'
-Plug 'junegunn/vim-easy-align'
 Plug 'mhinz/vim-signify'
 Plug 'elzr/vim-json'
 Plug 'slim-template/vim-slim'
@@ -41,11 +39,13 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'carlitux/deoplete-ternjs', { 'for': 'javascript' }
 Plug 'mtth/scratch.vim'
+Plug 'digitaltoad/vim-pug'
 
 call plug#end()
 
 nnoremap <silent> <Leader>t :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
+" escaping and basic stuff
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :wq<CR>
 nnoremap <Leader>= <C-w>=
@@ -57,6 +57,20 @@ nnoremap <Leader>, :noh<CR>
 
 vnoremap y "+y
 vnoremap jk <Esc>
+
+nnoremap <Leader>, :noh<CR>
+
+" Copy to clipboard
+vnoremap  <leader>y  "+y
+nnoremap  <leader>Y  "+yg_
+nnoremap  <leader>y  "+y
+
+" Paste from clipboard
+nnoremap <leader>p "+p
+nnoremap <leader>P "+P
+vnoremap <leader>p "+p
+vnoremap <leader>P "+P
+vnoremap y "+y
 
 tnoremap jk <C-\><C-n>
 
@@ -77,6 +91,9 @@ let NERDTreeQuitOnOpen = 0
 
 let g:scratch_horizontal = 0
 
+" fzf
+let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+nnoremap <Leader>e :Files<CR>
 
 map <Leader>sg :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
@@ -142,14 +159,19 @@ let g:airline_theme = 'base16_tomorrow'
 
 set statusline=\ 
 
+let g:airline_theme = 'base16_tomorrow'
+
+
+let g:airline_section_a       = '%t'
 let g:airline_section_b       = airline#section#create_left(['mode'])
-let g:airline_section_c       = airline#section#create_left(['branch'])
+let symbol = get(g:, 'airline#extensions#branch#symbol', g:airline_symbols.branch)
+let g:airline_section_c       = symbol . ' %{fugitive#head()}'
 let g:airline_section_y       = "%3c/%-3{strwidth(getline('.'))}"
 let g:airline_section_z       = "%3l\/%3L"
 
 " first line is left side; second is right
 let g:airline#extensions#default#layout = [
-  \ [ 'b', 'c' ],
+  \ [ 'a', 'b', 'c' ],
   \ [ 'x', 'y', 'z', 'error', 'warning' ]
   \ ]
 

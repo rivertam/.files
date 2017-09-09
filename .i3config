@@ -36,8 +36,6 @@ bindsym $mod+Shift+q kill
 
 bindsym $mod+d exec /usr/bin/zsh -c "source ~/.config/zsh/.zshrc && rofi-zsh.sh"
 
-bindsym $mod+c exec google-chrome
-
 # Change workspace screen
 bindsym $mod+s move workspace to output right
 
@@ -50,6 +48,8 @@ for_window [class="Nopflox"] resize set 531 300
 for_window [class="Nopflox"] move absolute position 3309 1860
 bindsym $mod+n exec --no-startup-id google-chrome --profile-directory="Default" --app="https://netflix.com" && sleep .1 && xdotool set_window --class Nopflox $(xdotool getwindowfocus)
 bindsym $mod+u exec --no-startup-id google-chrome --profile-directory="Default" --app="https://hulu.com" && sleep .1 && xdotool set_window --class Nopflox $(xdotool getwindowfocus)
+
+for_window [class="^Spotify$"] floating enable
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that

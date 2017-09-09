@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=$HOME/.oh-my-zsh
+export ZSH=/home/ben/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -114,11 +114,43 @@ function findr {
   rg -g "*$1*" --files
 }
 
+function background {
+  feh --bg-scale ~/.wallpapers/2017\ calendar
+}
+
+function laptop-mode {
+  xrandr --output HDMI2 --off
+  xrandr --output eDP1 --mode 2560x1440
+  background
+}
+
+function 4k-mode {
+  xrandr --output HDMI2 --mode 3840x2160 && \
+  xrandr --output eDP1 --off
+  background
+}
+
+function both-mode {
+  xrandr --output HDMI2 --mode 3840x2160 && \
+  xrandr --output eDP1 --mode 2560x1440 --right-of HDMI2
+  background
+}
+
 = () {
   calc="${@//p/+}"
   calc="${calc//x/*}"
   echo "$(($calc))"
 }
+
+export NVM_DIR="/home/ben/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+export GOPATH="/home/ben/go"
+export ANDROID_HOME="/home/ben/Android/Sdk"
+
+. /usr/local/lib/node_modules/deepify/hooks/deepify_comp.sh
+[[ -s /home/ben/.rsvm/rsvm.sh ]] && . /home/ben/.rsvm/rsvm.sh # This loads RSVM
+
+source /opt/ros/lunar/setup.zsh
 
 # Hook that occurs when you change pwd
 function chpwd() {

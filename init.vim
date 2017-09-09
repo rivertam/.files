@@ -1,9 +1,10 @@
 set t_Co=256
 set t_AB=^[[48;5;%dm
 set t_AF=^[[38;5;%dm
+set enc=utf-8
 set mouse=a
+set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
 filetype plugin on
-colorscheme Tomorrow-Night
 syntax on
 nnoremap <S-UP> :m .-1
 nnoremap <S-DOWN> :m .+1
@@ -14,9 +15,11 @@ set smartcase ignorecase
 set incsearch
 set ts=2 sw=2 sts=2 et
 set tabstop=3
+set clipboard=unnamedplus
+set hidden
+set wrap
 
-set fillchars+=vert:\
-
+set fillchars+=vert:\ 
 let mapleader = "\<Space>"
 
 " vim-plug section
@@ -26,22 +29,26 @@ Plug 'neovim/node-host', { 'do': 'npm install' }
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'LucHermitte/lh-vim-lib'
 Plug 'LucHermitte/local_vimrc'
+Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
+Plug 'alvan/vim-closetag'
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
 Plug 'Yggdroot/IndentLine'
 Plug 'scrooloose/nerdtree'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'elzr/vim-json'
-Plug 'pangloss/vim-javascript'
+Plug 'cespare/vim-toml'
 Plug 'ruanyl/vim-fixmyjs'
 Plug 'kewah/vim-stylefmt'
+Plug 'pangloss/vim-javascript'
 Plug 'othree/yajs.vim'
 Plug 'othree/es.next.syntax.vim'
 Plug 'flowtype/vim-flow'
+Plug 'reasonml-editor/vim-reason'
 Plug 'ryym/vim-riot'
 Plug 'mxw/vim-jsx'
 Plug 'jason0x43/vim-js-indent'
@@ -61,9 +68,12 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'mtth/scratch.vim'
 Plug 'digitaltoad/vim-pug'
+
+" Rust
 Plug 'racer-rust/vim-racer'
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'rust-lang/rust.vim'
+Plug 'sebastianmarkow/deoplete-rust'
 
 " Phoenix development
 Plug 'elixir-lang/vim-elixir'
@@ -79,8 +89,6 @@ Plug 'venantius/vim-eastwood' " Eastwood for linting
 
 call plug#end()
 
-nnoremap <silent> <Leader>t :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
-
 " escaping and basic stuff
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :q<CR>
@@ -93,20 +101,6 @@ inoremap jw <Esc>:w<CR>
 inoremap jq <Esc>:wq<CR>
 
 nnoremap <Leader>, :noh<CR>
-
-vnoremap y "+y
-
-" Copy to clipboard
-vnoremap  <leader>y  "+y
-nnoremap  <leader>Y  "+yg_
-nnoremap  <leader>y  "+y
-
-" Paste from clipboard
-nnoremap <leader>p "+p
-nnoremap <leader>P "+P
-vnoremap <leader>p "+p
-vnoremap <leader>P "+P
-vnoremap y "+y
 
 tnoremap jk <C-\><C-n>
 
@@ -129,9 +123,10 @@ map <Leader>sg :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> 
 let g:tsuquyomi_disable_quickfix = 1
 let g:neomake_verbose = 0
 let g:neomake_javascript_enabled_makers = ['eslint_d', 'flow']
+let g:flow#autoclose = 1
 let g:neomake_jsx_enabled_makers = ['eslint']
-let g:neomake_sh_enabled_makers = ['shellcheck']
 let g:neomake_scss_enabled_makers = ['stylelint']
+let g:neomake_reason_enabled_makers = ['merlin']
 let g:neomake_open_list = 0
 
 let g:neomake_warning_sign = {
@@ -157,20 +152,20 @@ autocmd FileType elixir let b:noNeomake=1
 autocmd! BufWritePre *.js call Fixmyjs()
 let g:fixmyjs_executable = '/home/ben/.yarn/bin/eslint_d'
 
+autocmd! BufWritePre *.re :ReasonPrettyPrint
+
 au BufWritePre *.css :Stylefmt
 
 " show trailing whitespace
 set list
 set listchars=tab:•\ ,trail:•,extends:»,precedes:«
 
-
 " deoplete (for autocomplete)
 inoremap <silent><expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#omni#input_patterns = {}
-let g:deoplete#omni#input_patterns.javascript = ['[^. *\t]\.\w*', '[A-Za-z]+']
-let g:deoplete#omni#input_patterns.typescript = '[.\.]*'
 let g:deoplete#omni#input_patterns.gitcommit = ['#']
+let g:deoplete#omni#input_patterns.reason = '[.\w]+'
 let g:deoplete#file#enable_buffer_path = 1
 
 set completeopt-=preview
@@ -180,6 +175,16 @@ function! neomake#makers#ft#rust#EnabledMakers()
 endfunction
 
 let g:closetag_filenames = "*.html,*.js,*.jsx"
+let g:closetag_close_shortcut = '>>'
+
+" Rust options
+let g:rustfmt_autosave = 1
+let g:rustfmt_fail_silently = 1
+let g:racer_cmd = "/home/ben/.cargo/bin/racer"
+let g:deoplete#sources#rust#racer_binary = "$(which racer)"
+autocmd FileType * let b:autoformat_autoindent=1
+let g:formatdef_rustfmt = '"cargo fmt"'
+let g:formatters_rust = ['rustfmt']
 
 function! neomake#makers#ft#rust#rustc()
     return {
@@ -197,55 +202,48 @@ function! neomake#makers#ft#rust#rustc()
         \ }
   endfunction
 
-autocmd FileType * let b:autoformat_autoindent=0
-autocmd FileType rust let b:autoformat_autoindent=1
-
 let g:github_access_token = $GITHUB_ACCESS_TOKEN
-
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 2
-let g:airline#extensions#tabline#fnamemod = ':t'
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline#extensions#tabline#right_sep = ' '
-let g:airline#extensions#tabline#right_alt_sep = '|'
-let g:airline_left_sep = ' '
-let g:airline_left_alt_sep = '|'
-let g:airline_right_sep = ' '
-let g:airline_right_alt_sep = '|'
-let g:airline_theme = 'base16_tomorrow'
-
-set statusline=\
-
-let g:airline_theme = 'base16_tomorrow'
-
-
-let g:airline_section_a       = '%t'
-let g:airline_section_b       = airline#section#create_left(['mode'])
-let symbol = get(g:, 'airline#extensions#branch#symbol', g:airline_symbols.branch)
-let g:airline_section_c       = symbol . ' %{fugitive#head()}'
-let g:airline_section_y       = "%3c/%-3{strwidth(getline('.'))}"
-let g:airline_section_z       = "%3l\/%3L"
-
-" first line is left side; second is right
-let g:airline#extensions#default#layout = [
-      \ [ 'a', 'b', 'c' ],
-      \ [ 'x', 'y', 'z', 'error', 'warning' ]
-      \ ]
-
-nnoremap gb :ls<CR>:b<Space>
-
-hi CursorLine cterm=bold ctermbg=234
-set cursorline!
-set wrap
 
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 let g:bufferline_echo = 0
-let g:formatdef_rustfmt = '"rustfmt"'
-let g:formatters_rust = ['rustfmt']
 
 let g:vim_json_syntax_conceal=0
 
+let g:loaded_matchparen = 1
+
+" Automatically reloads this file when you save it
+autocmd! BufWritePost *.vim :Resource
+command! Edit e ~/.config/nvim/init.vim
+command! E e ~/.config/nvim/init.vim
 command! Resource source ~/.config/nvim/init.vim
+
+function! DeleteInactiveBufs()
+    "From tabpagebuflist() help, get a list of all buffers in all tabs
+    let tablist = []
+    for i in range(tabpagenr('$'))
+        call extend(tablist, tabpagebuflist(i + 1))
+    endfor
+
+    "Below originally inspired by Hara Krishna Dara and Keith Roberts
+    "http://tech.groups.yahoo.com/group/vim/message/56425
+    for i in range(1, bufnr('$'))
+        if bufexists(i) && !getbufvar(i,"&mod") && index(tablist, i) == -1
+        "bufno exists AND isn't modified AND isn't in the list of buffers open in windows and tabs
+            silent exec 'bwipeout!' i
+        endif
+    endfor
+endfunction
+
+" autocmd BufEnter * :call DeleteInactiveBufs()
+
+" extra colorscheme stuff
+set background=dark
+let g:gruvbox_italic=1
+let g:gruvbox_vert_split="bg1"
+
+hi! link jsObjectKey GruvboxOrange
+hi! link jsOperator GruvboxRed
+
+colorscheme gruvbox

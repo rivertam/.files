@@ -1,0 +1,4 @@
+#!/bin/sh
+
+time=`date +%Y-%M-%d_%H-%M-%S`
+scrot -s -e "mv \$f ~/Pictures/screenshots/$time.png"

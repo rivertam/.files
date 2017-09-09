@@ -53,7 +53,7 @@ plugins=(git)
 
 # User configuration
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/.rvm/bin:$HOME/.fzf/bin:$HOME/.rvm/bin:/usr/local/go/bin:$HOME/.meteor:$HOME/.cargo/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/.yarn/bin"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/.rvm/bin:$HOME/.fzf/bin:$HOME/.rvm/bin:/usr/local/go/bin:$HOME/.meteor:$HOME/.cargo/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/.yarn/bin:$HOME/.config/.files/scripts"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -92,7 +92,7 @@ alias l="exa -laahgmuU@ --git --color-scale"
 alias ll="exa -lhgmuU@T --git --color-scale"
 alias tree="exa -T"
 alias vim="nvim"
-alias ced="vim ~/.config/.files"
+alias ced="pushd ~/.config/.files; vim; source ~/.config/zsh/.zshrc; popd"
 alias logout="sudo service lightdm restart"
 alias rg="rg --smart-case"
 alias rgcss="rg --type-add 'css:*css' -tcss"
@@ -101,6 +101,8 @@ alias hgrep="history | rg"
 alias wifi="nmtui"
 alias rustfmt="cargo fmt"
 alias ccat="pygmentize -g"
+alias pushd=">/dev/null pushd"
+alias popd=">/dev/null popd"
 
 # extra git stuff
 alias gcd="gco development && gup" 
@@ -124,3 +126,17 @@ function chpwd() {
     echo "Setup for this ROS environment"
   fi
 }
+
+if [[ "$FIRE_AND_FORGET" == "1" ]]
+then
+  ignore-and-spawn() {
+    oldwindowid=$(cat /tmp/__last_window)
+    BUFFER="$BUFFER > /dev/null 2>&1 disown; xdotool windowfocus $oldwindowid; clear;"
+    notify-send "$BUFFER"
+    zle .accept-line
+  }
+
+  zle -N ignore-and-spawn
+  bindkey '^M' ignore-and-spawn
+  bindkey '^J' ignore-and-spawn
+fi

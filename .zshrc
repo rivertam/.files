@@ -124,7 +124,27 @@ function chpwd() {
   then
     source devel/setup.zsh
     echo "Setup for this ROS environment"
+    return
   fi
+
+  local up=0
+  while true
+  do
+    local base="$(printf '../%.0s' $(seq 0 $up))"
+    local p="$base/devel/setup.zsh"
+    if [ -f $p ]
+    then
+      source $p
+      echo "Setup for this ROS environment"
+      break
+    fi
+    up=$(expr $up + 1)
+    echo $(readlink -f $base)
+    if [ $(readlink -f "$base") = "/" ]
+    then
+      break
+    fi
+  done
 }
 
 if [[ "$FIRE_AND_FORGET" == "1" ]]

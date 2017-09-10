@@ -173,7 +173,6 @@ function chpwd() {
       break
     fi
     up=$(expr $up + 1)
-    echo $(readlink -f $base)
     if [ $(readlink -f "$base") = "/" ]
     then
       break

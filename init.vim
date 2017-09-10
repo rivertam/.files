@@ -129,7 +129,7 @@ let g:neomake_error_sign = {
 
 Plug 'benjie/neomake-local-eslint.vim'
 
-" Plug 'Shougo/deoplete.nvim'
+" deoplete (for autocomplete)
 Plug 'Shougo/deoplete.nvim'
 
 inoremap <silent><expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"

@@ -152,8 +152,7 @@ export ANDROID_HOME="/home/ben/Android/Sdk"
 
 source /opt/ros/lunar/setup.zsh
 
-# Hook that occurs when you change pwd
-function chpwd() {
+function check-ros() {
   if [ -f devel/setup.zsh ]
   then
     source devel/setup.zsh
@@ -185,6 +184,18 @@ then
   source /opt/ros/lunar/setup.zsh
 fi
 
+if [ -f ~/catkin_workspace/devel/setup.zsh ]
+then
+  source ~/catkin_workspace/devel/setup.zsh
+fi
+
+check-ros
+
+# Hook that occurs when you change pwd
+function chpwd() {
+  check-ros
+}
+
 if [[ "$FIRE_AND_FORGET" == "1" ]]
 then
   ignore-and-spawn() {
@@ -198,3 +209,5 @@ then
   bindkey '^M' ignore-and-spawn
   bindkey '^J' ignore-and-spawn
 fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

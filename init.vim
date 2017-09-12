@@ -4,6 +4,7 @@ set t_AF=^[[38;5;%dm
 set enc=utf-8
 set mouse=a
 set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
+let NVIM_TUI_ENABLE_CURSOR_SHAPE = 0
 filetype plugin on
 syntax on
 nnoremap <S-UP> :m .-1
@@ -11,6 +12,7 @@ nnoremap <S-DOWN> :m .+1
 set noea
 set number
 au TermOpen * setlocal nonumber norelativenumber
+au TermOpen * startinsert
 set smartcase ignorecase
 set incsearch
 set ts=2 sw=2 sts=2 et
@@ -25,22 +27,35 @@ let mapleader = "\<Space>"
 " vim-plug section
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'neovim/node-host', { 'do': 'npm install' }
-Plug 'Shougo/vimproc.vim', { 'do': 'make' }
-Plug 'LucHermitte/lh-vim-lib'
-Plug 'LucHermitte/local_vimrc'
-Plug 'morhetz/gruvbox'
+" These really should have no conflicts (very common and well-maintained)
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
+
+Plug 'scrooloose/nerdcommenter'
+let g:NERDSpaceDelims = 1
+let g:NERDDefaultAlign = 'left'
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+Plug 'neovim/node-host', { 'do': 'npm install' }
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+Plug 'LucHermitte/lh-vim-lib'
+Plug 'LucHermitte/local_vimrc'
+Plug 'morhetz/gruvbox'
+
 Plug 'alvan/vim-closetag'
-" Plug 'vim-airline/vim-airline'
-" Plug 'vim-airline/vim-airline-themes'
 Plug 'Yggdroot/IndentLine'
 Plug 'scrooloose/nerdtree'
+let NERDTreeQuitOnOpen = 0
+
+" These might have conflicts
+Plug 'yssl/QFEnter'
 Plug 'elzr/vim-json'
+
+let g:vim_json_syntax_conceal=0
+
 Plug 'cespare/vim-toml'
 Plug 'ruanyl/vim-fixmyjs'
 Plug 'kewah/vim-stylefmt'
@@ -59,11 +74,58 @@ Plug 'evanmiller/nginx-vim-syntax'
 Plug 'easymotion/vim-easymotion'
 Plug 'mhinz/vim-signify'
 Plug 'slim-template/vim-slim'
+
+" Rust
+Plug 'racer-rust/vim-racer'
+Plug 'mustache/vim-mustache-handlebars'
+Plug 'rust-lang/rust.vim'
+Plug 'sebastianmarkow/deoplete-rust'
+
+" Rust options
+let g:rustfmt_autosave = 1
+let g:rustfmt_fail_silently = 1
+let g:racer_cmd = "/home/ben/.cargo/bin/racer"
+let g:deoplete#sources#rust#racer_binary = "$(which racer)"
+autocmd FileType * let b:autoformat_autoindent=1
+let g:formatdef_rustfmt = '"cargo fmt"'
+let g:formatters_rust = ['rustfmt']
+
+" neomake (for linting)
 Plug 'benekastah/neomake'
+
+" neomake relevant stuff
+
+fun! ConditionalNeomake()
+  if exists('b:noNeomake')
+    return
+  endif
+  Neomake
+endfun
+
+autocmd! BufWritePost * call ConditionalNeomake()
+
+let g:neomake_verbose = 0
+let g:neomake_javascript_enabled_makers = ['eslint_d', 'flow']
+let g:neomake_jsx_enabled_makers = ['eslint']
+let g:neomake_scss_enabled_makers = ['stylelint']
+let g:neomake_reason_enabled_makers = ['merlin']
+let g:neomake_rust_enabled_makers = ['rustc']
+let g:neomake_open_list = 0
+
+let g:neomake_warning_sign = {
+      \ 'text': ')=',
+      \ 'texthl': 'WarningMsg',
+      \ }
+
+let g:neomake_error_sign = {
+      \ 'text': 'D=',
+      \ 'texthl': 'ErrorMsg',
+      \ }
+
 Plug 'benjie/neomake-local-eslint.vim'
 
-" deoplete (for autocomplete)
 " Plug 'Shougo/deoplete.nvim'
+Plug 'Shougo/deoplete.nvim'
 
 inoremap <silent><expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 let g:deoplete#enable_at_startup = 1
@@ -81,18 +143,23 @@ Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 " fzf
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+
+let $FZF_DEFAULT_COMMAND = 'fd'
+let g:fzf_layout = { 'window': 'enew' }
+nnoremap <Leader>e :Files<CR>
+
+map <Leader>sg :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+      \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+      \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+
 Plug 'mtth/scratch.vim'
 Plug 'digitaltoad/vim-pug'
-
-" Rust
-Plug 'racer-rust/vim-racer'
-Plug 'mustache/vim-mustache-handlebars'
-Plug 'rust-lang/rust.vim'
-Plug 'sebastianmarkow/deoplete-rust'
 
 " Phoenix development
 Plug 'elixir-lang/vim-elixir'
 Plug 'avdgaag/vim-phoenix'
+
+autocmd FileType elixir let b:noNeomake=1
 
 " clojure development
 Plug 'tpope/vim-fireplace' " for REPL stuff
@@ -121,6 +188,7 @@ nnoremap <Leader>= <C-w>=
 nnoremap <Leader>, :noh<CR>
 nnoremap <Leader> <C-W>
 nnoremap <Leader>t :term<CR>
+nnoremap <Leader>np :set nopaste <CR>
 inoremap jk <Esc>
 inoremap jw <Esc>:w<CR>
 inoremap jq <Esc>:wq<CR>
@@ -130,49 +198,9 @@ nnoremap <Leader>, :noh<CR>
 tnoremap jk <C-\><C-n>
 
 let g:jsx_ext_required = 0
-let NERDTreeQuitOnOpen = 0
 
 let g:scratch_horizontal = 0
 
-" fzf
-let $FZF_DEFAULT_COMMAND = 'fd'
-let g:fzf_layout = { 'window': 'enew' }
-nnoremap <Leader>e :Files<CR>
-
-map <Leader>sg :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
-      \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
-      \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
-
-" neomake (for linting)
-
-let g:tsuquyomi_disable_quickfix = 1
-let g:neomake_verbose = 0
-let g:neomake_javascript_enabled_makers = ['eslint_d', 'flow']
-let g:flow#autoclose = 1
-let g:neomake_jsx_enabled_makers = ['eslint']
-let g:neomake_scss_enabled_makers = ['stylelint']
-let g:neomake_reason_enabled_makers = ['merlin']
-let g:neomake_open_list = 0
-
-let g:neomake_warning_sign = {
-      \ 'text': ')=',
-      \ 'texthl': 'WarningMsg',
-      \ }
-
-let g:neomake_error_sign = {
-      \ 'text': 'D=',
-      \ 'texthl': 'ErrorMsg',
-      \ }
-
-fun! ConditionalNeomake()
-  if exists('b:noNeomake')
-    return
-  endif
-  Neomake
-endfun
-
-autocmd! BufWritePost * call ConditionalNeomake()
-autocmd FileType elixir let b:noNeomake=1
 
 autocmd! BufWritePre *.js call Fixmyjs()
 let g:fixmyjs_executable = '/home/ben/.yarn/bin/eslint_d'
@@ -185,56 +213,11 @@ au BufWritePre *.css :Stylefmt
 set list
 set listchars=tab:•\ ,trail:•,extends:»,precedes:«
 
-" deoplete (for autocomplete)
-inoremap <silent><expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#omni#input_patterns = {}
-let g:deoplete#omni#input_patterns.gitcommit = ['#']
-let g:deoplete#omni#input_patterns.reason = '[.\w]+'
-let g:deoplete#file#enable_buffer_path = 1
-
 set completeopt-=preview
 
-function! neomake#makers#ft#rust#EnabledMakers()
-    return ['rustc']
-endfunction
-
-let g:closetag_filenames = "*.html,*.js,*.jsx"
-let g:closetag_close_shortcut = '>>'
-
-" Rust options
-let g:rustfmt_autosave = 1
-let g:rustfmt_fail_silently = 1
-let g:racer_cmd = "/home/ben/.cargo/bin/racer"
-let g:deoplete#sources#rust#racer_binary = "$(which racer)"
-autocmd FileType * let b:autoformat_autoindent=1
-let g:formatdef_rustfmt = '"cargo fmt"'
-let g:formatters_rust = ['rustfmt']
-
-function! neomake#makers#ft#rust#rustc()
-    return {
-        \ 'args': ['rustc', '-Zno-trans'],
-        \ 'exe': 'cargo',
-        \ 'append_file': 0,
-        \ 'errorformat':
-            \ '%-G%f:%s:,' .
-            \ '%f:%l:%c: %trror: %m,' .
-            \ '%f:%l:%c: %tarning: %m,' .
-            \ '%f:%l:%c: %m,'.
-            \ '%f:%l: %trror: %m,'.
-            \ '%f:%l: %tarning: %m,'.
-            \ '%f:%l: %m',
-        \ }
-  endfunction
-
-let g:github_access_token = $GITHUB_ACCESS_TOKEN
-
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 let g:bufferline_echo = 0
-
-let g:vim_json_syntax_conceal=0
 
 let g:loaded_matchparen = 1
 
@@ -243,6 +226,18 @@ autocmd! BufWritePost *.vim :Resource
 command! Edit e ~/.config/nvim/init.vim
 command! E e ~/.config/nvim/init.vim
 command! Resource source ~/.config/nvim/init.vim
+
+" extra colorscheme stuff
+set background=dark
+let g:gruvbox_italic=1
+let g:gruvbox_vert_split="bg1"
+
+hi! link jsObjectKey GruvboxOrange
+hi! link jsOperator GruvboxRed
+
+colorscheme gruvbox
+
+" unused stuff I may eventually want but probably not
 
 function! DeleteInactiveBufs()
     "From tabpagebuflist() help, get a list of all buffers in all tabs
@@ -262,13 +257,3 @@ function! DeleteInactiveBufs()
 endfunction
 
 " autocmd BufEnter * :call DeleteInactiveBufs()
-
-" extra colorscheme stuff
-set background=dark
-let g:gruvbox_italic=1
-let g:gruvbox_vert_split="bg1"
-
-hi! link jsObjectKey GruvboxOrange
-hi! link jsOperator GruvboxRed
-
-colorscheme gruvbox

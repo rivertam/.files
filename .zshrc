@@ -104,6 +104,7 @@ alias rustfmt="cargo fmt"
 alias ccat="pygmentize -g"
 alias pushd=">/dev/null pushd"
 alias popd=">/dev/null popd"
+alias svim="sudo -e"
 
 # extra git stuff
 alias gcd="gco development && gup" 

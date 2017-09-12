@@ -61,9 +61,24 @@ Plug 'mhinz/vim-signify'
 Plug 'slim-template/vim-slim'
 Plug 'benekastah/neomake'
 Plug 'benjie/neomake-local-eslint.vim'
-Plug 'jaxbot/github-issues.vim'
-Plug 'Shougo/deoplete.nvim'
+
+" deoplete (for autocomplete)
+" Plug 'Shougo/deoplete.nvim'
+
+inoremap <silent><expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#omni#input_patterns = {}
+let g:deoplete#omni#input_patterns.gitcommit = ['#']
+let g:deoplete#omni#input_patterns.reason = '[.\w]+'
+let g:deoplete#file#enable_buffer_path = 1
+
+Plug 'Shougo/neoinclude.vim'
 Plug 'steelsojka/deoplete-flow'
+
+" YouCompleteMe (also for autocomplete)
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+
+" fzf
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'mtth/scratch.vim'
@@ -86,6 +101,16 @@ Plug 'guns/vim-clojure-highlight' " more highlighting I guess ?
 Plug 'junegunn/rainbow_parentheses.vim' " tasty parens
 Plug 'snoe/nvim-parinfer.js' " TASTY parens
 Plug 'venantius/vim-eastwood' " Eastwood for linting
+
+" C++
+au FileType c,cpp let g:deoplete#enable_at_startup = 0
+au FileType c,cpp let b:noNeomake = 1
+let g:clang_library_path = '/usr/lib/llvm-3.8/lib/libclang.so.1'
+
+" ROS
+Plug 'taketwo/vim-ros'
+
+autocmd BufRead,BufNewFile *.launch setfiletype xml
 
 call plug#end()
 

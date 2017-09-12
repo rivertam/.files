@@ -37,7 +37,6 @@ Plug 'tpope/vim-vinegar'
 Plug 'scrooloose/nerdcommenter'
 let g:NERDSpaceDelims = 1
 let g:NERDDefaultAlign = 'left'
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 Plug 'neovim/node-host', { 'do': 'npm install' }
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
@@ -47,8 +46,14 @@ Plug 'morhetz/gruvbox'
 
 Plug 'alvan/vim-closetag'
 Plug 'Yggdroot/IndentLine'
+Plug 'ryanoasis/vim-devicons'
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
+
 Plug 'scrooloose/nerdtree'
 let NERDTreeQuitOnOpen = 0
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " These might have conflicts
 Plug 'yssl/QFEnter'

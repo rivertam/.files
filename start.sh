@@ -53,3 +53,18 @@ mkdir -p ~/.config
 } || {
   >&2 print-in-red "Failed to link init.vim for neovim"
 }
+
+{
+  ln -s "$PWD/alacritty.yml" ~/.config/alacritty/alacritty.yml && \
+  echo "Linked alacritty config"
+} || {
+  >&2 print-in-red "Failed to link alacritty config"
+}
+
+{
+  ln -s "$PWD/fonts/Anonymice Nerd Font Complete.ttf" "$HOME/.local/share/fonts/Anonymice Nerd Font Complete.ttf" && \
+  ln -s "$PWD/fonts/Anonymice Nerd Font Complete Mono.ttf" "$HOME/.local/share/fonts/Anonymice Nerd Font Complete Mono.ttf" && \
+  echo "Linked fonts"
+} || {
+  >&2 print-in-red "Failed to link fonts"
+}

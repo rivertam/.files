@@ -121,18 +121,21 @@ function background {
 function laptop-mode {
   xrandr --output HDMI2 --off
   xrandr --output eDP1 --mode 2560x1440
+  pactl set-sink-volume 0 150%
   background
 }
 
 function 4k-mode {
   xrandr --output HDMI2 --mode 3840x2160 && \
   xrandr --output eDP1 --off
+  pactl set-sink-volume 0 100%
   background
 }
 
 function both-mode {
   xrandr --output HDMI2 --mode 3840x2160 && \
   xrandr --output eDP1 --mode 2560x1440 --right-of HDMI2
+  pactl set-sink-volume 0 100%
   background
 }
 

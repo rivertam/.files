@@ -149,6 +149,11 @@ function chpwd() {
   done
 }
 
+if [ -f /opt/ros/lunar/setup.zsh ]
+then
+  source /opt/ros/lunar/setup.zsh
+fi
+
 if [[ "$FIRE_AND_FORGET" == "1" ]]
 then
   ignore-and-spawn() {

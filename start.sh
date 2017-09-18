@@ -70,6 +70,13 @@ mkdir -p ~/.config
 }
 
 {
+  ln -s "$PWD/.xinitrc" ~/.xinitrc && \
+  echo "Linked xinitrc"
+} || {
+  >&2 print-in-red "Failed to link xinitrc"
+}
+
+{
   mkdir -p ~/.local/share/fonts/ && \
   ln -s "$PWD/fonts/Anonymice Nerd Font Complete.ttf" "$HOME/.local/share/fonts/Anonymice Nerd Font Complete.ttf" && \
   ln -s "$PWD/fonts/Anonymice Nerd Font Complete Mono.ttf" "$HOME/.local/share/fonts/Anonymice Nerd Font Complete Mono.ttf" && \

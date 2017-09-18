@@ -149,7 +149,7 @@ Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
-let $FZF_DEFAULT_COMMAND = 'fd'
+" let $FZF_DEFAULT_COMMAND = 'fd'
 let g:fzf_layout = { 'window': 'enew' }
 nnoremap <Leader>e :Files<CR>
 

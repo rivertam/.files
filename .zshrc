@@ -53,9 +53,9 @@ plugins=(git)
 
 # User configuration
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/.rvm/bin:$HOME/.fzf/bin:$HOME/.rvm/bin:/usr/local/go/bin:$HOME/.meteor:$HOME/.cargo/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/.yarn/bin:$HOME/.config/.files/scripts"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/.rvm/bin:$HOME/.fzf/bin:$HOME/.rvm/bin:/usr/local/go/bin:$HOME/.meteor:$HOME/.cargo/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/.yarn/bin:$HOME/.config/.files/scripts:$HOME/.bin"
 # export MANPATH="/usr/local/man:$MANPATH"
-
+export NVM_DIR="$HOME/.nvm"
 source $ZSH/oh-my-zsh.sh
 
 # You may need to manually set your language environment
@@ -141,7 +141,6 @@ function chpwd() {
       break
     fi
     up=$(expr $up + 1)
-    echo $(readlink -f $base)
     if [ $(readlink -f "$base") = "/" ]
     then
       break
@@ -167,3 +166,5 @@ then
   bindkey '^M' ignore-and-spawn
   bindkey '^J' ignore-and-spawn
 fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

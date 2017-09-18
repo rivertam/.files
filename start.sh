@@ -62,6 +62,13 @@ mkdir -p ~/.config
 }
 
 {
+  sudo ln -s "$PWD/i3blocks.conf" /etc/i3blocks.conf && \
+  echo "Linked i3blocks config"
+} || {
+  >&2 print-in-red "Failed to link i3blocks config"
+}
+
+{
   ln -s "$PWD/fonts/Anonymice Nerd Font Complete.ttf" "$HOME/.local/share/fonts/Anonymice Nerd Font Complete.ttf" && \
   ln -s "$PWD/fonts/Anonymice Nerd Font Complete Mono.ttf" "$HOME/.local/share/fonts/Anonymice Nerd Font Complete Mono.ttf" && \
   echo "Linked fonts"

@@ -121,8 +121,20 @@ function background {
 function laptop-mode {
   xrandr --output HDMI2 --off
   xrandr --output eDP1 --mode 2560x1440
-  pactl set-sink-volume 0 150%
+  amore
   background
+}
+
+function amore {
+  pactl set-sink-volume 0 120%
+}
+
+function evenmore {
+  pactl set-sink-volume 0 150%
+}
+
+function evermore {
+  pactl set-sink-volume 0 160%
 }
 
 function 4k-mode {
@@ -153,8 +165,6 @@ export ANDROID_HOME="/home/ben/Android/Sdk"
 . /usr/local/lib/node_modules/deepify/hooks/deepify_comp.sh
 [[ -s /home/ben/.rsvm/rsvm.sh ]] && . /home/ben/.rsvm/rsvm.sh # This loads RSVM
 
-source /opt/ros/lunar/setup.zsh
-
 function check-ros() {
   if [ -f devel/setup.zsh ]
   then
@@ -182,9 +192,9 @@ function check-ros() {
   done
 }
 
-if [ -f /opt/ros/lunar/setup.zsh ]
+if [ -f /opt/ros/kinetic/setup.zsh ]
 then
-  source /opt/ros/lunar/setup.zsh
+  source /opt/ros/kinetic/setup.zsh
 fi
 
 if [ -f ~/catkin_workspace/devel/setup.zsh ]

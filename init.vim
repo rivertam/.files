@@ -133,7 +133,7 @@ Plug 'benjie/neomake-local-eslint.vim'
 Plug 'Shougo/deoplete.nvim'
 
 inoremap <silent><expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_at_startup = 0
 let g:deoplete#omni#input_patterns = {}
 let g:deoplete#omni#input_patterns.gitcommit = ['#']
 let g:deoplete#omni#input_patterns.reason = '[.\w]+'
@@ -144,6 +144,7 @@ Plug 'steelsojka/deoplete-flow'
 
 " YouCompleteMe (also for autocomplete)
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+
 
 " fzf
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -177,6 +178,7 @@ Plug 'venantius/vim-eastwood' " Eastwood for linting
 " C++
 au FileType c,cpp let g:deoplete#enable_at_startup = 0
 au FileType c,cpp let b:noNeomake = 1
+au FileType c,cpp let g:ycm_global_ycm_extra_conf = "/home/ben/.config/nvim/plugged/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"
 let g:clang_library_path = '/usr/lib/llvm-3.8/lib/libclang.so.1'
 
 " ROS

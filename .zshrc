@@ -169,4 +169,6 @@ fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+source ~/catkin_wokspace/devel/setup.zsh
+
 return 0

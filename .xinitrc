@@ -1,4 +1,3 @@
 #!/bin/bash
-
-xrandr --output DP-0 --scale 1.25x1.25
-feh --bg-fill ~/Pictures/wallpapers/1.jpg
+exec i3
+feh --image-bg="#1a1a1a" --bg-center ~/Pictures/wallpapers/standard_bots_logo.png

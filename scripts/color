@@ -1,0 +1,4 @@
+#!/bin/sh
+
+color="$(gpick -p)"
+notify-send "$color"

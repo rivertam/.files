@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+cd ~/WorkRepos/robotics/
+ROS_MASTER_URI=http://127.0.0.1:11311 ./tools/start_simulator.sh

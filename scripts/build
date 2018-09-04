@@ -1,0 +1,6 @@
+#!/bin/zsh
+
+cd ~/WorkRepos/robotics
+./tools/build.sh
+
+notify-send "Built!"

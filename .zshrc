@@ -53,7 +53,7 @@ plugins=(git)
 
 # User configuration
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/.rvm/bin:$HOME/.fzf/bin:$HOME/.rvm/bin:/usr/local/go/bin:$HOME/.meteor:$HOME/.cargo/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/.yarn/bin:$HOME/.config/.files/scripts:$HOME/.bin"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/.rvm/bin:$HOME/.fzf/bin:$HOME/.rvm/bin:/usr/local/go/bin:$HOME/.meteor:$HOME/.cargo/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/.yarn/bin:$HOME/.config/.files/scripts:$HOME/.bin:$HOME/.local/share/npm/bin"
 # export MANPATH="/usr/local/man:$MANPATH"
 export NVM_DIR="$HOME/.nvm"
 source $ZSH/oh-my-zsh.sh
@@ -95,7 +95,8 @@ alias vim="nvim"
 alias ced="pushd ~/.config/.files; vim; source ~/.config/zsh/.zshrc; popd"
 alias ccd="pushd ~/.config/.files"
 alias logout="sudo service lightdm restart"
-alias rg="rg --smart-case"
+alias rg="rg -g \"!**/lib/**/*\" -g \"!*.dae\" -g \"!*.stla\" --smart-case"
+alias rgs="rg -g \"*.cpp\" -g \"*.js\" -g \"*.yml\" -g \"*.sh\""
 alias rgcss="rg --type-add 'css:*css' -tcss"
 alias pgrep="ps aux | rg"
 alias hgrep="history | rg"
@@ -105,6 +106,7 @@ alias ccat="pygmentize -g"
 alias pushd=">/dev/null pushd"
 alias popd=">/dev/null popd"
 alias svim="sudo -e"
+alias ni="npm install"
 
 # extra git stuff
 alias gcd="gco development && gup" 
@@ -169,6 +171,25 @@ fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-source ~/catkin_wokspace/devel/setup.zsh
+source ~/catkin_workspace/devel/setup.zsh
+
+export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:~/frontend/node_modules
+export ROBOT_IP=96.244.40.173
+export ROS_MASTER_URI=http://$ROBOT_IP:11311
+export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(openrave-config --python-dir)/openravepy/_openravepy_
+export PYTHONPATH=$PYTHONPATH:$(openrave-config --python-dir)
+
+export LESS="-R"
+export LESSOPEN="| bat %s"
+
+export BAT_THEME="TwoDark"
+
+export STANDARD_BOTS_ROBOTICS_REPO=/home/ben/WorkRepos/robotics
 
 return 0

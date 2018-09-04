@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/zsh
 
-time=`date +%Y-%M-%d_%H-%M-%S`
-scrot -s -e "mv \$f ~/Pictures/screenshots/$time.png"
+time=`date +%Y-%m-%d_%H-%M-%S`
+read -r G < <(slop -f "%g")
+import -window root -crop $G ~/Pictures/screenshots/$time.png

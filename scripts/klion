@@ -1,0 +1,4 @@
+#!/usr/bin/zsh
+
+cd ~/WorkRepos/robotics
+./tools/start_kinematics_shell.sh

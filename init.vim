@@ -13,6 +13,7 @@ set noea
 set number
 au TermOpen * setlocal nonumber norelativenumber
 au TermOpen * startinsert
+au TermOpen * setlocal scrollback=1000
 set smartcase ignorecase
 set incsearch
 set ts=2 sw=2 sts=2 et
@@ -46,41 +47,85 @@ Plug 'morhetz/gruvbox'
 
 Plug 'alvan/vim-closetag'
 Plug 'Yggdroot/IndentLine'
-Plug 'ryanoasis/vim-devicons'
-let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
-
 Plug 'scrooloose/nerdtree'
 let NERDTreeQuitOnOpen = 0
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
+Plug 'fidian/hexmode'
+let g:hexmode_patterns = '*.bin,*.exe,*.dat,*.o'
+
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " These might have conflicts
+Plug 'Shougo/deoplete.nvim'
+
+inoremap <silent><expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#omni#input_patterns = {}
+let g:deoplete#omni#input_patterns.gitcommit = ['#']
+let g:deoplete#omni#input_patterns.reason = '[.\w]+'
+let g:deoplete#file#enable_buffer_path = 1
+
+Plug 'powerman/vim-plugin-AnsiEsc'
 Plug 'yssl/QFEnter'
 Plug 'elzr/vim-json'
 
 let g:vim_json_syntax_conceal=0
 
+Plug 'aperezdc/vim-template'
+
+Plug 'Shougo/echodoc.vim'
+
+let g:echodoc#enable_at_startup = 1
+let g:echodoc#type = "signature"
+set cmdheight=2
+
 Plug 'cespare/vim-toml'
 Plug 'ruanyl/vim-fixmyjs'
-Plug 'kewah/vim-stylefmt'
 Plug 'pangloss/vim-javascript'
-Plug 'othree/yajs.vim'
-Plug 'othree/es.next.syntax.vim'
-Plug 'flowtype/vim-flow'
+
+" Plug 'othree/yajs.vim'
+" Plug 'othree/es.next.syntax.vim'
 Plug 'reasonml-editor/vim-reason'
 Plug 'ryym/vim-riot'
 Plug 'mxw/vim-jsx'
 Plug 'jason0x43/vim-js-indent'
+Plug 'galooshi/vim-import-js'
+
 Plug 'lambdatoast/elm.vim'
 Plug 'Quramy/tsuquyomi'
+Plug 'Quramy/vim-js-pretty-template'
+Plug 'jparise/vim-graphql'
+
+autocmd FileType javascript JsPreTmpl graphql
+
 Plug 'leafgarland/typescript-vim'
 Plug 'evanmiller/nginx-vim-syntax'
 Plug 'easymotion/vim-easymotion'
 Plug 'mhinz/vim-signify'
 Plug 'slim-template/vim-slim'
+Plug 'prettier/vim-prettier', {
+      \ 'do': 'yarn install' }
+
+let g:prettier#autoformat = 0
+let g:prettier#config#single_quote = 'true'
+let g:prettier#config#trailing_comma = 'all'
+let g:prettier#config#bracket_spacing = 'true'
+let g:prettier#config#jsx_bracket_same_line = 'false'
+let g:prettier#config#arrow_parens = 'avoid'
+
+fun! ConditionalPrettier()
+  if exists('b:noPrettier')
+    return
+  endif
+  Prettier
+endfun
+
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md call ConditionalPrettier()
 
 " Rust
+let g:deoplete#sources#rust#racer_binary = systemlist("which racer")[0]
+let g:deoplete#sources#rust#rust_source_path = system("echo `rustc --print sysroot`/lib/rustlib/src/rust/src")
 Plug 'racer-rust/vim-racer'
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'rust-lang/rust.vim'
@@ -89,8 +134,10 @@ Plug 'sebastianmarkow/deoplete-rust'
 " Rust options
 let g:rustfmt_autosave = 1
 let g:rustfmt_fail_silently = 1
-let g:racer_cmd = "/home/ben/.cargo/bin/racer"
-let g:deoplete#sources#rust#racer_binary = "$(which racer)"
+
+let g:racer_experimental_completer = 1
+let g:deoplete#sources#rust#show_duplicates = 0
+autocmd FileType rust nmap <buffer> gd <Plug>DeopleteRustGoToDefinitionVSplit
 autocmd FileType * let b:autoformat_autoindent=1
 let g:formatdef_rustfmt = '"cargo fmt"'
 let g:formatters_rust = ['rustfmt']
@@ -110,11 +157,11 @@ endfun
 autocmd! BufWritePost * call ConditionalNeomake()
 
 let g:neomake_verbose = 0
-let g:neomake_javascript_enabled_makers = ['eslint_d', 'flow']
+let g:neomake_javascript_enabled_makers = ['eslint_d']
 let g:neomake_jsx_enabled_makers = ['eslint']
 let g:neomake_scss_enabled_makers = ['stylelint']
 let g:neomake_reason_enabled_makers = ['merlin']
-let g:neomake_rust_enabled_makers = ['rustc']
+let g:neomake_rust_enabled_makers = ['cargo']
 let g:neomake_open_list = 0
 
 let g:neomake_warning_sign = {
@@ -129,16 +176,6 @@ let g:neomake_error_sign = {
 
 Plug 'benjie/neomake-local-eslint.vim'
 
-" Plug 'Shougo/deoplete.nvim'
-Plug 'Shougo/deoplete.nvim'
-
-inoremap <silent><expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#omni#input_patterns = {}
-let g:deoplete#omni#input_patterns.gitcommit = ['#']
-let g:deoplete#omni#input_patterns.reason = '[.\w]+'
-let g:deoplete#file#enable_buffer_path = 1
-
 Plug 'Shougo/neoinclude.vim'
 Plug 'steelsojka/deoplete-flow'
 
@@ -149,7 +186,7 @@ Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
-" let $FZF_DEFAULT_COMMAND = 'fd'
+let $FZF_DEFAULT_COMMAND = 'fd'
 let g:fzf_layout = { 'window': 'enew' }
 nnoremap <Leader>e :Files<CR>
 
@@ -175,14 +212,36 @@ Plug 'snoe/nvim-parinfer.js' " TASTY parens
 Plug 'venantius/vim-eastwood' " Eastwood for linting
 
 " C++
-au FileType c,cpp let g:deoplete#enable_at_startup = 0
-au FileType c,cpp let b:noNeomake = 1
-let g:clang_library_path = '/usr/lib/llvm-3.8/lib/libclang.so.1'
+" au FileType c,cpp let b:noNeomake = 1
+"  Plug 'zchee/deoplete-clang'
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+
+let g:LanguageClient_serverCommands = {
+\ 'cpp': ['/home/ben/WorkRepos/robotics/tools/start_cquery.sh', 
+\ '--log-file=/tmp/cq.log', 
+\ '--init={"cacheDirectory":"/var/cquery/"}']
+\ }
+
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
+" 
+nn <silent> <M-.> :call LanguageClient_textDocument_definition()<cr>
+nn <silent> <M-,> :call LanguageClient_textDocument_references()<cr>
+nn <f2> :call LanguageClient_textDocument_rename()<cr>
+
+" let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.8/lib/libclang.so.1'
+" let g:deoplete#sources#clang#libclang_header = '/usr/lib/llvm-3.8/lib/clang'
+" let g:deoplete#sources#clang#clang_complete_database = '/home/ben/vision/zed-bindings/build/compile_commands.json'
 
 " ROS
 Plug 'taketwo/vim-ros'
 
 autocmd BufRead,BufNewFile *.launch setfiletype xml
+autocmd BufRead,BufNewFile *.world setfiletype xml
+autocmd BufRead,BufNewFile *.sdf setfiletype xml
 
 call plug#end()
 
@@ -206,13 +265,7 @@ let g:jsx_ext_required = 0
 
 let g:scratch_horizontal = 0
 
-
-autocmd! BufWritePre *.js call Fixmyjs()
-let g:fixmyjs_executable = '/home/ben/.yarn/bin/eslint_d'
-
 autocmd! BufWritePre *.re :ReasonPrettyPrint
-
-au BufWritePre *.css :Stylefmt
 
 " show trailing whitespace
 set list
@@ -237,10 +290,26 @@ set background=dark
 let g:gruvbox_italic=1
 let g:gruvbox_vert_split="bg1"
 
-hi! link jsObjectKey GruvboxOrange
-hi! link jsOperator GruvboxRed
+hi! link jsOperator GruvboxOrange
+hi! link jsObjectKey GruvboxFg2
+hi! link jsObject GruvboxFg2
+hi! link jsTemplateExpression GruvboxGreen
+hi! link jsStorageClass GruvboxOrange
+hi! link jsConditional GruvboxPurple
+hi! link jsObjectBraces GruvboxAqua
+hi! link jsDestructuringBraces GruvboxGray
+hi! link jsVariableDef GruvboxGreen
+hi! link jsDestructuringBlock GruvboxGreen
+hi! link jsFuncBraces GruvboxBlue
+hi! link jsTemplateString GruvboxYellow
+hi! link jsString GruvboxYellow
+hi! link jsFuncCall GruvboxAqua
+hi! link jsObjectProp GruvboxFg4
 
 colorscheme gruvbox
+
+" This is already implicitly specified, but vim-import-js overwrites it
+nnoremap <Leader>j <C-w>j
 
 " unused stuff I may eventually want but probably not
 

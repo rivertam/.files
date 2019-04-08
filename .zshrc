@@ -6,6 +6,7 @@ export ZSH=$HOME/.oh-my-zsh
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 ZSH_THEME="dieter"
+# ZSH_THEME="spaceship"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -54,6 +55,7 @@ plugins=(git)
 # User configuration
 
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/.rvm/bin:$HOME/.fzf/bin:$HOME/.rvm/bin:/usr/local/go/bin:$HOME/.meteor:$HOME/.cargo/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/.yarn/bin:$HOME/.config/.files/scripts:$HOME/.bin:$HOME/.local/share/npm/bin"
+export PATH="$PATH:$HOME/.local/lib/python2.7/site-packages"
 # export MANPATH="/usr/local/man:$MANPATH"
 export NVM_DIR="$HOME/.nvm"
 source $ZSH/oh-my-zsh.sh
@@ -174,7 +176,8 @@ fi
 source ~/catkin_workspace/devel/setup.zsh
 
 export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:~/frontend/node_modules
-export ROBOT_IP=96.244.40.173
+# export ROBOT_IP=96.244.40.173
+export ROBOT_IP=192.168.0.50
 export ROS_MASTER_URI=http://$ROBOT_IP:11311
 export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
 
@@ -183,7 +186,10 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(openrave-config --python-dir)/openravepy/_openravepy_
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-9.2/lib64
 export PYTHONPATH=$PYTHONPATH:$(openrave-config --python-dir)
+
+export PATH="$PATH:$HOME/.local/depot_tools"
 
 export LESS="-R"
 export LESSOPEN="| bat %s"
@@ -192,4 +198,10 @@ export BAT_THEME="TwoDark"
 
 export STANDARD_BOTS_ROBOTICS_REPO=/home/ben/WorkRepos/robotics
 
-return 0
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/ben/google-cloud-sdk/path.zsh.inc' ]; then . '/home/ben/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/ben/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/ben/google-cloud-sdk/completion.zsh.inc'; fi
+
+source /home/ben/.config/broot/launcher/bash/br

@@ -93,26 +93,27 @@ Plug 'jason0x43/vim-js-indent'
 Plug 'galooshi/vim-import-js'
 
 Plug 'lambdatoast/elm.vim'
-Plug 'Quramy/tsuquyomi'
+" Plug 'Quramy/tsuquyomi'
 Plug 'Quramy/vim-js-pretty-template'
 Plug 'jparise/vim-graphql'
 
 autocmd FileType javascript JsPreTmpl graphql
 
-Plug 'leafgarland/typescript-vim'
-Plug 'evanmiller/nginx-vim-syntax'
+" Plug 'leafgarland/typescript-vim'
 Plug 'easymotion/vim-easymotion'
 Plug 'mhinz/vim-signify'
 Plug 'slim-template/vim-slim'
 Plug 'prettier/vim-prettier', {
-      \ 'do': 'yarn install' }
+      \ 'do': 'yarn install',
+      \ }
 
-let g:prettier#autoformat = 0
+let g:prettier#autoformat = 1
 let g:prettier#config#single_quote = 'true'
 let g:prettier#config#trailing_comma = 'all'
 let g:prettier#config#bracket_spacing = 'true'
 let g:prettier#config#jsx_bracket_same_line = 'false'
 let g:prettier#config#arrow_parens = 'avoid'
+let g:prettier#config#prose_wrap = 'always'
 
 fun! ConditionalPrettier()
   if exists('b:noPrettier')
@@ -121,26 +122,22 @@ fun! ConditionalPrettier()
   Prettier
 endfun
 
-autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md call ConditionalPrettier()
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.mdx,*.html call ConditionalPrettier()
+
+" Markdown
+Plug 'jxnblk/vim-mdx-js'
 
 " Rust
-let g:deoplete#sources#rust#racer_binary = systemlist("which racer")[0]
-let g:deoplete#sources#rust#rust_source_path = system("echo `rustc --print sysroot`/lib/rustlib/src/rust/src")
-Plug 'racer-rust/vim-racer'
 Plug 'mustache/vim-mustache-handlebars'
-Plug 'rust-lang/rust.vim'
 Plug 'sebastianmarkow/deoplete-rust'
-
-" Rust options
+Plug 'rust-lang/rust.vim'
 let g:rustfmt_autosave = 1
-let g:rustfmt_fail_silently = 1
 
-let g:racer_experimental_completer = 1
-let g:deoplete#sources#rust#show_duplicates = 0
-autocmd FileType rust nmap <buffer> gd <Plug>DeopleteRustGoToDefinitionVSplit
+let g:deoplete#sources#rust#racer_binary='/home/ben/.cargo/bin/racer'
+let g:deoplete#sources#rust#rust_source_path='/home/ben/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src'
+let g:deoplete#sources#rust#show_duplicates=1
+
 autocmd FileType * let b:autoformat_autoindent=1
-let g:formatdef_rustfmt = '"cargo fmt"'
-let g:formatters_rust = ['rustfmt']
 
 " neomake (for linting)
 Plug 'benekastah/neomake'
@@ -161,7 +158,6 @@ let g:neomake_javascript_enabled_makers = ['eslint_d']
 let g:neomake_jsx_enabled_makers = ['eslint']
 let g:neomake_scss_enabled_makers = ['stylelint']
 let g:neomake_reason_enabled_makers = ['merlin']
-let g:neomake_rust_enabled_makers = ['cargo']
 let g:neomake_open_list = 0
 
 let g:neomake_warning_sign = {
@@ -177,10 +173,42 @@ let g:neomake_error_sign = {
 Plug 'benjie/neomake-local-eslint.vim'
 
 Plug 'Shougo/neoinclude.vim'
-Plug 'steelsojka/deoplete-flow'
+" Plug 'autozimu/LanguageClient-neovim', {
+"     \ 'branch': 'next',
+"     \ 'do': 'bash install.sh',
+"     \ }
+" 
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
-" YouCompleteMe (also for autocomplete)
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+call plug#end()
+
+" let g:LanguageClient_serverCommands = {
+"     \ 'rust': ['rustup', 'run', 'stable', 'rls'],
+"     \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+"     \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+"     \ 'python': ['/usr/local/bin/pyls'],
+"     \ }
+" 
+" let g:LanguageClient_autoStart = 1
+
+" nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+" " Or map each action separately
+" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+" nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+" nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
+
+Plug 'jaawerth/nrun.vim'
+Plug 'leafgarland/typescript-vim'
+
+let g:javascript_plugin_flow = 1
+
+" Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+
+let g:ycm_filetype_blacklist = { 'javascript': 1 }
+
+Plug 'wokalski/autocomplete-flow'
+autocmd BufRead,BufNewFile *.ts setfiletype typescript
 
 " fzf
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -211,30 +239,12 @@ Plug 'junegunn/rainbow_parentheses.vim' " tasty parens
 Plug 'snoe/nvim-parinfer.js' " TASTY parens
 Plug 'venantius/vim-eastwood' " Eastwood for linting
 
-" C++
-" au FileType c,cpp let b:noNeomake = 1
-"  Plug 'zchee/deoplete-clang'
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-
-let g:LanguageClient_serverCommands = {
-\ 'cpp': ['/home/ben/WorkRepos/robotics/tools/start_cquery.sh', 
-\ '--log-file=/tmp/cq.log', 
-\ '--init={"cacheDirectory":"/var/cquery/"}']
-\ }
-
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
-" 
-nn <silent> <M-.> :call LanguageClient_textDocument_definition()<cr>
-nn <silent> <M-,> :call LanguageClient_textDocument_references()<cr>
-nn <f2> :call LanguageClient_textDocument_rename()<cr>
-
-" let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.8/lib/libclang.so.1'
-" let g:deoplete#sources#clang#libclang_header = '/usr/lib/llvm-3.8/lib/clang'
-" let g:deoplete#sources#clang#clang_complete_database = '/home/ben/vision/zed-bindings/build/compile_commands.json'
+" Plug 'zxqfl/tabnine-vim'
+let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.8/lib/libclang.so.1'
+let g:deoplete#sources#clang#libclang_header = '/usr/lib/llvm-3.8/lib/clang'
+let g:deoplete#sources#clang#clang_complete_database = '/home/ben/vision/zed-bindings/build/compile_commands.json'
 
 " ROS
 Plug 'taketwo/vim-ros'
@@ -305,11 +315,35 @@ hi! link jsTemplateString GruvboxYellow
 hi! link jsString GruvboxYellow
 hi! link jsFuncCall GruvboxAqua
 hi! link jsObjectProp GruvboxFg4
+hi! link jsObjectProp GruvboxFg4
+
+hi! link typescriptLineComment GruvboxRed
+hi! link typescriptStatement GruvboxYellow
+hi! link typescriptBranch GruvboxYellow
+hi! link typescriptConditional GruvboxYellow
+
+
+hi! link rustCommentLine GruvboxRed
+hi! link rustCommentLineDoc GruvboxRed
+hi! link rustStructure GruvboxOrange
+hi! link rustKeyword GruvboxOrange
+hi! link rustRepeat GruvboxOrange
+hi! link rustEscape GruvboxYellow
+hi! link rustString GruvboxAqua
 
 colorscheme gruvbox
 
 " This is already implicitly specified, but vim-import-js overwrites it
 nnoremap <Leader>j <C-w>j
+
+function! OpenTask()
+  let l:path = expand("%:p")
+  let l:url_with_md = substitute(l:path, "^.*content\/tasks\/", "http://localhost:8000\/", "")
+  let l:url = substitute(l:url_with_md, "\.mdx\\?", "", "")
+
+  echo l:url
+  exec 'silent !google-chrome ' . l:url . ' &'
+endfunction
 
 " unused stuff I may eventually want but probably not
 
@@ -330,4 +364,4 @@ function! DeleteInactiveBufs()
     endfor
 endfunction
 
-" autocmd BufEnter * :call DeleteInactiveBufs()
+autocmd BufEnter * :call DeleteInactiveBufs()

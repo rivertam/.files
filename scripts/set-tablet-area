@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+read -r G < <(slop -f "%g")
+xsetwacom set 17 MapToOutput "$G"
+xsetwacom set 18 MapToOutput "$G"
+xsetwacom set 19 MapToOutput "$G"
+xsetwacom set 24 MapToOutput "$G"

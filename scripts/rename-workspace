@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+num="$(i3-msg -t get_workspaces \
+  | jq '.[] | select(.focused==true).num' \
+  | cut -d"\"" -f2)"
+
+i3-input -F "rename workspace to \"$num: %s\"" -P 'New name: '

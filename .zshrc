@@ -1,4 +1,13 @@
 # Path to your oh-my-zsh installation.
+
+mount | grep "media\/tb_drive" > /dev/null
+if [ $? -eq 0 ]
+then
+else
+  echo "Mounting tb_drive..."
+  sudo mount /dev/sda1 /media/tb_drive
+fi
+
 export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load.
@@ -56,6 +65,11 @@ plugins=(git)
 
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/.rvm/bin:$HOME/.fzf/bin:$HOME/.rvm/bin:/usr/local/go/bin:$HOME/.meteor:$HOME/.cargo/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/.yarn/bin:$HOME/.config/.files/scripts:$HOME/.bin:$HOME/.local/share/npm/bin"
 export PATH="$PATH:$HOME/.local/lib/python2.7/site-packages"
+export PATH="$PATH:/usr/lib/jvm/jdk-12.0.2/bin"
+export PATH="$PATH:$HOME/.local/bin"
+
+export PATH_TO_FX="/usr/lib/jvm/javafx-sdk-11.0.2"
+export JAVA_HOME="/usr/lib/jvm/jdk-12.0.2"
 # export MANPATH="/usr/local/man:$MANPATH"
 export NVM_DIR="$HOME/.nvm"
 source $ZSH/oh-my-zsh.sh
@@ -97,7 +111,7 @@ alias vim="nvim"
 alias ced="pushd ~/.config/.files; vim; source ~/.config/zsh/.zshrc; popd"
 alias ccd="pushd ~/.config/.files"
 alias logout="sudo service lightdm restart"
-alias rg="rg -g \"!**/lib/**/*\" -g \"!*.dae\" -g \"!*.stla\" --smart-case"
+alias rg="rg -g \"!*.dae\" -g \"!*.stla\" --smart-case"
 alias rgs="rg -g \"*.cpp\" -g \"*.js\" -g \"*.yml\" -g \"*.sh\""
 alias rgcss="rg --type-add 'css:*css' -tcss"
 alias pgrep="ps aux | rg"
@@ -173,7 +187,7 @@ fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-source ~/catkin_workspace/devel/setup.zsh
+# source ~/catkin_workspace/devel/setup.zsh
 
 export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:~/frontend/node_modules
 # export ROBOT_IP=96.244.40.173
@@ -187,9 +201,13 @@ export NVM_DIR="$HOME/.nvm"
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(openrave-config --python-dir)/openravepy/_openravepy_
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-9.2/lib64
-export PYTHONPATH=$PYTHONPATH:$(openrave-config --python-dir)
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/python2.7/dist-packages/openravepy/_openravepy_/
 
-export PATH="$PATH:$HOME/.local/depot_tools"
+# export PYTHONPATH="$PYTHONPATH:$HOME/.local/lib/python3.6/site-packages"
+# export PYTHONPATH="$PYTHONPATH:/usr/lib/python3/dist-packages"
+# export PYTHONPATH="$PYTHONPATH:/usr/lib/python2.7/dist-packages"
+
+# export PATH="$PATH:$HOME/.local/depot_tools"
 
 export LESS="-R"
 export LESSOPEN="| bat %s"
@@ -205,3 +223,9 @@ if [ -f '/home/ben/google-cloud-sdk/path.zsh.inc' ]; then . '/home/ben/google-cl
 if [ -f '/home/ben/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/ben/google-cloud-sdk/completion.zsh.inc'; fi
 
 source /home/ben/.config/broot/launcher/bash/br
+
+unset PYTHONPATH
+
+# tabtab source for electron-forge package
+# uninstall by removing these lines or running `tabtab uninstall electron-forge`
+[[ -f /home/ben/.npm/_npx/3669/lib/node_modules/electron-forge/node_modules/tabtab/.completions/electron-forge.zsh ]] && . /home/ben/.npm/_npx/3669/lib/node_modules/electron-forge/node_modules/tabtab/.completions/electron-forge.zsh

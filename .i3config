@@ -29,7 +29,7 @@ new_window none
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec hyper
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -41,6 +41,8 @@ bindsym $mod+c exec google-chrome
 bindsym $sup+Shift+k exec killall chrome
 
 assign [class="Gazeb"] 6:[6]
+
+for_window [class="^.*"] border pixel 1
 
 # Change workspace screen
 bindsym $mod+s move workspace to output right
@@ -231,21 +233,22 @@ exec --no-startup-id /home/ben/.xinitrc
 exec --no-startup-id compton -f
 exec --no-startup-id flashfocus
 
-bindsym $sup+l exec i3lock -i ~/Pictures/wallpapers/standard_bots_logo.png
+bindsym $sup+l exec i3lock -i ~/Pictures/wallpapers/standard_bots_logo.png -t
 
 set $bg-color            #000000
 set $inactive-bg-color   #111111
 set $text-color          #d3d3d3
 set $inactive-text-color #999999
 set $urgent-bg-color     #339933
-set $border-color        #ffffff
+set $border-color        #000000
+set $border-attention    #f7b125
 
 # window colors
-# #                       border          background         text                indicator
-client.focused            $border-color   $border-color      $text-color          $border-color
-client.unfocused          $border-color   $border-color      $inactive-text-color $border-color
-client.focused_inactive   $border-color   $border-color      $inactive-text-color $border-color
-client.urgent             $border-color   $border-color      $text-color          $border-color
+# #                       border             background            text                indicator
+client.focused            $border-attention  $border-attention     $text-color          $border-color
+client.unfocused          $border-color      $border-color         $inactive-text-color $border-color
+client.focused_inactive   $border-color      $border-color         $inactive-text-color $border-color
+client.urgent             $border-color      $border-color         $text-color          $border-color
 
 gaps outer 0
 gaps inner 0

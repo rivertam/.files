@@ -3,4 +3,5 @@ return {
 	config = function()
 		require("copilot").setup()
 	end,
+	enable = false,
 }

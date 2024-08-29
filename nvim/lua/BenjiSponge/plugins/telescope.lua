@@ -1,27 +1,27 @@
 return {
-  "nvim-telescope/telescope.nvim",
-  branch = "0.1.x",
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-    { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-    "nvim-tree/nvim-web-devicons",
-  },
+	"nvim-telescope/telescope.nvim",
+	branch = "0.1.x",
+	dependencies = {
+		"nvim-lua/plenary.nvim",
+		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+		"nvim-tree/nvim-web-devicons",
+	},
 
-  config = function()
-    local telescope = require("telescope")
-    local actions = require("telescope.actions")
+	config = function()
+		local telescope = require("telescope")
+		local actions = require("telescope.actions")
 
-    telescope.setup({
-      defaults = {
-        path_display = { "smart" },
-      },
-    })
+		telescope.setup({
+			defaults = {
+				path_display = { "smart" },
+			},
+		})
 
-    telescope.load_extension("fzf")
+		telescope.load_extension("fzf")
 
-    local keymap = vim.keymap
+		local keymap = vim.keymap
 
-    keymap.set("n", "<leader>E", "<cmd>Telescope find_files<cr>", { desc = "Fuzzy find files in cwd" })
-    keymap.set("n", "<leader>e", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
-  end,
+		keymap.set("n", "<leader>e", "<cmd>Telescope find_files<cr>", { desc = "Fuzzy find files in cwd" })
+		keymap.set("n", "<leader>E", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
+	end,
 }
